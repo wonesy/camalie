@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// Spoke is the interface that interacts with the hub to communicate with other spokes
 type Spoke interface {
 	ID() uuid.UUID
 	Send(interface{}) error
@@ -23,6 +24,7 @@ type Hub struct {
 	ended      chan struct{}
 }
 
+// NewHub constructor for Hub
 func NewHub() *Hub {
 	id, _ := uuid.NewUUID()
 	return &Hub{
@@ -30,6 +32,7 @@ func NewHub() *Hub {
 	}
 }
 
+// Stop shuts down the running loop
 func (h *Hub) Stop() error {
 	h.stop <- struct{}{}
 
@@ -41,19 +44,22 @@ func (h *Hub) Stop() error {
 	}
 }
 
+// Register adds a new spoke to a communication hub
 func (h *Hub) Register(sp Spoke) {
 	h.register <- sp
 }
 
+// Unregister removes a spoke from a communication hub
 func (h *Hub) Unregister(id uuid.UUID) {
 	h.unregister <- id
 }
 
+// Broadcast sends a message to all of the spokes
 func (h *Hub) Broadcast(msg interface{}) {
 	h.broadcast <- msg
 }
 
-// Start ...
+// Start begins the loop that runs the hub's main control
 func (h *Hub) Start() {
 	h.register = make(chan Spoke, 5)
 	h.unregister = make(chan uuid.UUID, 5)

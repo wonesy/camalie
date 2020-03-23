@@ -7,7 +7,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/suite"
-	mocks "github.com/wonesy/yenta/mocks"
+	mocks "github.com/wonesy/camalie/yenta/mocks"
 )
 
 type HubTestSuite struct {
