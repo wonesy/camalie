@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package camalie.chat;
+
+option go_package = "chat";
+
+import "proto/chat/chat.proto";
+import "google/protobuf/empty.proto";
+
+service Chat {
+    rpc SendMessage(camalie.chat.Message) returns (google.protobuf.Empty);
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package camalie.chat;
+
+option go_package = "chat";
+
+message Message {
+    string sender = 1;
+    string content = 2;
+    string send_time = 3;
+}
