@@ -4,9 +4,29 @@ package camalie.chat;
 
 option go_package = "chat";
 
-import "proto/chat/chat.proto";
 import "google/protobuf/empty.proto";
 
-service Chat {
-    rpc SendMessage(camalie.chat.Message) returns (google.protobuf.Empty);
+service Service {
+    // joins an already existing hub
+    rpc JoinHub(JoinHubRequest) returns (google.protobuf.Empty);
+
+    // leaves a hub that a client has already subscribed to
+    rpc LeaveHub(LeaveHubRequest) returns (google.protobuf.Empty);
+
+    // creates and joins a new hub
+    rpc CreateHub(CreateHubRequest) returns (google.protobuf.Empty);
+}
+
+message JoinHubRequest {
+    string hub = 1;
+    string client = 2;
+}
+
+message LeaveHubRequest {
+    string hub = 1;
+    string client = 2;
+}
+
+message CreateHubRequest {
+    string client = 1;
 }

@@ -6,6 +6,11 @@ option go_package = "chat";
 
 message Message {
     string sender = 1;
-    string content = 2;
-    string send_time = 3;
+    string hub = 2;
+    string content = 3;
+    string send_time = 4;
+}
+
+message Hub {
+    string id = 1;
 }
