@@ -1,20 +1,25 @@
 package chat
 
 import (
-	"github.com/gorilla/websocket"
 	"github.com/segmentio/ksuid"
 	pbchat "github.com/wonesy/camalie/proto/chat"
 )
 
+// ClientWebSocket implements a websocket
+type ClientWebSocket interface {
+	ReadJSON(v interface{}) error
+	WriteJSON(v interface{}) error
+}
+
 // Client represents a chat client
 type Client struct {
 	id string
-	ws *websocket.Conn
+	ws ClientWebSocket
 	h  *Hub
 }
 
 // NewClient constructor for Client
-func NewClient(ws *websocket.Conn) *Client {
+func NewClient(ws ClientWebSocket) *Client {
 	return &Client{
 		id: ksuid.New().String(),
 		ws: ws,
@@ -50,6 +55,7 @@ func (c *Client) Start() {
 				// TODO log
 				continue
 			}
+
 			c.h.Broadcast(msg)
 		}
 	}()

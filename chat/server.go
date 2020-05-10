@@ -2,8 +2,10 @@ package chat
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/golang/protobuf/ptypes/empty"
+	"github.com/google/uuid"
 	"github.com/wonesy/camalie/db"
 	pbchat "github.com/wonesy/camalie/proto/chat"
 	"google.golang.org/grpc/codes"
@@ -13,6 +15,7 @@ import (
 // Server manages all endpoints for a chat server
 type Server struct {
 	conn *db.Connection
+	hubs []*Hub
 }
 
 // NewServer constructor for server
@@ -25,6 +28,16 @@ func NewServer(conn *db.Connection) *Server {
 // CreateHub creates a new chat hub and immediately allows the client to join
 func (s *Server) CreateHub(ctx context.Context, r *pbchat.CreateHubRequest) (*empty.Empty, error) {
 	// create a new hub in the database and save it in the
+	id := uuid.New().String()
+	cmd := "INSERT INTO hub (id, created_by) VALUES ($1, $2);"
+
+	_, err := s.conn.Execute(cmd, id, r.GetClient())
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	fmt.Printf("Hub created with id: %v\n", id)
+
 	return &empty.Empty{}, nil
 }
 
